@@ -72,17 +72,28 @@ public abstract class Passenger {
 	 * OR (departureTime < bookingTime) 
 	 */
 	public Passenger(int bookingTime, int departureTime) throws PassengerException  {
-		//Stuff here 
+		//check booking and departure times are valid
+		if (bookingTime <=0 || departureTime <= 0 || departureTime <bookingTime){
+			throw new PassengerException("Unable to create passenger, invalid booking or departure time");
+		}	else {
+			this.bookingTime = bookingTime;
+			this.departureTime = departureTime;
+		}
+		
 		this.passID = "" + Passenger.index; 
-		Passenger.index++; 
-		//Stuff here 
+		Passenger.index++; 		
+		this.newState = true;
+		this.confirmed = false;
+		this.inQueue = false;
+		this.refused = false;
 	}
+	
 	
 	/**
 	 * Simple no-argument constructor to support {@link #upgrade()}
 	 */
 	protected Passenger() {
-
+		
 	}
 	
 	/**
@@ -103,9 +114,22 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (cancellationTime < 0) OR (departureTime < cancellationTime)
 	 */
 	public void cancelSeat(int cancellationTime) throws PassengerException {
-
+		
+		//check passenger state is valid to be canceled
+		if (this.isNew() || this.isQueued() || this.isRefused()||this.isFlown()){
+			throw new PassengerException("Unable to cancel seat, passenger state incompatible");
+		}
+		//check inputs for confirmation and departure time are valid
+		if (confirmationTime <0 || departureTime <confirmationTime ){
+			throw new PassengerException("Invalid confirmation or departure time");
+		}
+			
+		this.newState = true;
+		this.bookingTime = cancellationTime;
+		this.confirmed = false;
 	}
 
+	
 	/**
 	 * Transition passenger to Confirmed seat<br>
 	 * PRE: isNew(this) OR inQueue(this)<br>
@@ -123,7 +147,26 @@ public abstract class Passenger {
 	 * 		   OR (confirmationTime < 0) OR (departureTime < confirmationTime)
 	 */
 	public void confirmSeat(int confirmationTime, int departureTime) throws PassengerException {
-	
+		//check passenger state is valid to be confirmed
+		if (this.isConfirmed() || this.isRefused() || this.isFlown()){
+			throw new PassengerException("Unable to set passenger state to confirmed, passenger state incompatible");
+		}
+		//check inputs for confirmation and departure time are valid
+		if (confirmationTime <0 || departureTime <confirmationTime ){
+			throw new PassengerException("Invalid confirmation or departure time");
+		}
+		
+		if (this.inQueue){
+			this.exitQueueTime = confirmationTime;
+			this.inQueue = false;
+		}
+		
+		
+		this.newState = false;
+		this.confirmed = true;
+		this.departureTime = departureTime;
+		this.confirmationTime = confirmationTime;
+		
 	}
 
 	/**
@@ -139,6 +182,18 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (departureTime <= 0)
 	 */
 	public void flyPassenger(int departureTime) throws PassengerException {
+		//check passenger state is valid to be changed to flown
+		if (this.isNew() || this.isQueued() || this.isRefused() || this.isFlown()){
+			throw new PassengerException("Unable to set passenger state as flown, passenger state incompatible");
+		}
+		
+		//check departure time is valid
+		if (departureTime <= 0){
+			throw new PassengerException("Unable to set passenger state as flown, invalid departure time");
+		}
+		this.departureTime = departureTime;
+		this.confirmed = false;
+		this.flown = true;
 		
 	}
 
@@ -148,7 +203,7 @@ public abstract class Passenger {
 	 * @return the bookingTime
 	 */
 	public int getBookingTime() {
-		
+		return this.bookingTime;
 	}
 
 	/**
@@ -158,7 +213,7 @@ public abstract class Passenger {
 	 * @return the confirmationTime
 	 */
 	public int getConfirmationTime() {
-		
+		return this.confirmationTime;
 	}
 
 	/**
@@ -167,7 +222,7 @@ public abstract class Passenger {
 	 * @return the departureTime
 	 */
 	public int getDepartureTime() {
-		
+		return this.departureTime;
 	}
 	
 	/**
@@ -176,7 +231,7 @@ public abstract class Passenger {
 	 * @return the enterQueueTime
 	 */
 	public int getEnterQueueTime() {
-		
+		return this.enterQueueTime;
 	}
 
 	/**
@@ -185,7 +240,7 @@ public abstract class Passenger {
 	 * @return the exitQueueTime
 	 */
 	public int getExitQueueTime() {
-		
+		return this.exitQueueTime;
 	}
 
 	/**
@@ -194,7 +249,7 @@ public abstract class Passenger {
 	 * @return the passID
 	 */
 	public String getPassID() {
-		
+		return this.passID;
 	}
 
 	/**
@@ -203,7 +258,7 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if Confirmed state; false otherwise 
 	 */
 	public boolean isConfirmed() {
-		
+		return this.confirmed;
 	}
 		
 	/**
@@ -212,7 +267,7 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if Flown state; false otherwise 
 	 */
 	public boolean isFlown() {
-		
+		return this.flown;
 	}
 	
 	/**
@@ -221,16 +276,16 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if New state; false otherwise 
 	 */
 	public boolean isNew() {
-		
+		return this.newState;
 	}
 
 	/**
 	 * Boolean status indicating whether Passenger is currently Queued
 	 * 
 	 * @return <code>boolean</code> true if Queued state; false otherwise 
-	 */
+	 */ 
 	public boolean isQueued() {
-		
+		return this.inQueue;
 	}
 	
 	/**
@@ -239,7 +294,7 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if Refused state; false otherwise 
 	 */
 	public boolean isRefused() {
-		
+		return this.refused;
 	}
 	
 	/**
@@ -267,6 +322,20 @@ public abstract class Passenger {
 	 *         isFlown(this) OR (queueTime < 0) OR (departureTime < queueTime)
 	 */
 	public void queuePassenger(int queueTime, int departureTime) throws PassengerException {
+		//check passenger state is valid to be placed in queue
+		if (this.isQueued() || this.isConfirmed()|| this.isRefused() || this.isFlown()){
+			
+			throw new PassengerException("Unable to set passenger state as inQueue, passenger state incompatible");
+		}
+		//check queue and departure times are valid
+		if ( queueTime<0 || departureTime < queueTime){
+					throw new PassengerException("Unable to set passenger state as inQueue, Invalid queue or depature time");
+		}
+		
+		this.enterQueueTime = queueTime;
+		this.departureTime = departureTime;
+		this.newState = false;
+		this.inQueue = true;
 		
 	}
 	
@@ -285,6 +354,24 @@ public abstract class Passenger {
 	 * 			OR (refusalTime < 0) OR (refusalTime < bookingTime)
 	 */
 	public void refusePassenger(int refusalTime) throws PassengerException {
+		
+	//check if passenger state can be changed to refused
+	if (this.isConfirmed() || this.isRefused()|| this.isFlown()){
+			
+		throw new PassengerException("Unable to set passenger state as refused, passenger state incompatible");
+	}
+	//check if refusal time is valid
+	if ( refusalTime<0 || refusalTime <this.bookingTime){
+		throw new PassengerException("Unable to set passenger state as refused, Invalid refusal time");
+	}
+	//if passenger is in queue, exit the queue and record time
+	if (this.inQueue){
+		this.exitQueueTime = refusalTime;
+		this.inQueue = false;
+	}
+				
+	this.newState = false;
+	this.refused = true;
 		
 	}
 	
@@ -328,6 +415,12 @@ public abstract class Passenger {
 	 */
 	public boolean wasConfirmed() {
 		
+		//if (this.isConfirmed() || this.isFlown() || this.confirmationTime != 0 ){
+		if (this.confirmationTime != 0 ){
+			return true;
+		} 
+		return false;
+		
 	}
 
 	/**
@@ -336,7 +429,8 @@ public abstract class Passenger {
 	 * @return <code>boolean</code> true if was Queued state; false otherwise
 	 */
 	public boolean wasQueued() {
-		
+		return (this.enterQueueTime != 0 || this.exitQueueTime != 0);
+			
 	}
 	
 	/**
@@ -346,8 +440,31 @@ public abstract class Passenger {
 	 */
 	protected void copyPassengerState(Passenger p) {
 		
+		this.newState = p.isNew();
+		this.confirmed = p.isConfirmed();
+		this.flown = p.isFlown();
+		this.inQueue = p.isQueued();
+		
+		//call state based on p's state
+		/*
+		if (p.isNew()){
+			this.newState = true;
+		}else if (p.isQueued()){
+			
+		}else if (p.isConfirmed()){
+			
+		}else if (p.isFlown()){
+			this.
+		}
+		
+		if (p.isQueued()){
+			this.
+		}
+		*/
 	}
 	
 	//Various private helper methods to check arguments and throw exceptions
+	
+	
 
 }
