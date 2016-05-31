@@ -73,7 +73,7 @@ public abstract class Passenger {
 	 */
 	public Passenger(int bookingTime, int departureTime) throws PassengerException  {
 		//check booking and departure times are valid
-		if (bookingTime <=0 || departureTime <= 0 || departureTime <bookingTime){
+		if (bookingTime <0 || departureTime <= 0 || departureTime <bookingTime){
 			throw new PassengerException("Unable to create passenger, invalid booking or departure time");
 		}	else {
 			this.bookingTime = bookingTime;
