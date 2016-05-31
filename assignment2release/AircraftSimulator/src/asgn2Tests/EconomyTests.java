@@ -6,8 +6,6 @@ package asgn2Tests;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
-
-import asgn2Passengers.Business;
 import asgn2Passengers.Economy;
 import asgn2Passengers.Passenger;
 import asgn2Passengers.PassengerException;
