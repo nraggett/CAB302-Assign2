@@ -120,7 +120,7 @@ public abstract class Passenger {
 			throw new PassengerException("Unable to cancel seat, passenger state incompatible");
 		}
 		//check inputs for confirmation and departure time are valid
-		if (confirmationTime <0 || departureTime <confirmationTime ){
+		if (cancellationTime <0 || departureTime <cancellationTime ){
 			throw new PassengerException("Invalid confirmation or departure time");
 		}
 			
@@ -148,7 +148,7 @@ public abstract class Passenger {
 	 */
 	public void confirmSeat(int confirmationTime, int departureTime) throws PassengerException {
 		//check passenger state is valid to be confirmed
-		if (this.isConfirmed() || this.isRefused() || this.isFlown()){
+		if (this.isConfirmed() || this.isRefused() || this.isFlown()||this.isConfirmed()){
 			throw new PassengerException("Unable to set passenger state to confirmed, passenger state incompatible");
 		}
 		//check inputs for confirmation and departure time are valid
@@ -416,10 +416,7 @@ public abstract class Passenger {
 	public boolean wasConfirmed() {
 		
 		//if (this.isConfirmed() || this.isFlown() || this.confirmationTime != 0 ){
-		if (this.confirmationTime != 0 ){
-			return true;
-		} 
-		return false;
+		return (this.getConfirmationTime() != 0);
 		
 	}
 

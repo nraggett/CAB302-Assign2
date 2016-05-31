@@ -50,9 +50,9 @@ public class Business extends Passenger {
 		 test.copyPassengerState(this);
 		 test.confirmationTime = this.confirmationTime;
 		 
-		//change pass id
-		String newPassID = 'F'+passID.substring(1,(this.getPassID().length()-1));
-		test.passID = newPassID;
+		//If pass ID should be old pass id
+		//String newPassID = 'F'+this.passID.substring(1,(this.getPassID().length()-1));
+		//test.passID = newPassID;
 		return test; 
 		
 	}

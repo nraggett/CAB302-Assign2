@@ -31,7 +31,7 @@ public class Economy extends Passenger {
 
 	@Override
 	public Passenger upgrade() {
-		//business upgrades to first.
+		//Economy upgrades to Premium.
 		
 		 Premium test = null;
 		try {
@@ -43,8 +43,8 @@ public class Economy extends Passenger {
 		 test.confirmationTime = this.confirmationTime;
 		 
 		//change pass id
-		String newPassID = 'F'+passID.substring(1,(this.getPassID().length()-1));
-		test.passID = newPassID;
+		//String newPassID = 'Y'+passID.substring(1,(this.getPassID().length()-1));
+		//test.passID = newPassID;
 		return test; 
 	}
 }

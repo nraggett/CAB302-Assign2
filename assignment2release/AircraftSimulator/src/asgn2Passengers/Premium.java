@@ -45,8 +45,8 @@ public class Premium extends Passenger {
 		 test.confirmationTime = this.confirmationTime;
 		 
 		//change pass id
-		String newPassID = 'F'+passID.substring(1,(this.getPassID().length()-1));
-		test.passID = newPassID;
+		//String newPassID = 'F'+passID.substring(1,(this.getPassID().length()-1));
+		//test.passID = newPassID;
 		return test; 
 	}
 	
