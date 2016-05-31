@@ -116,8 +116,13 @@ public abstract class Passenger {
 	public void cancelSeat(int cancellationTime) throws PassengerException {
 		
 		//check passenger state is valid to be canceled
-		if (this.isNew() || this.isQueued() || this.isRefused()||this.isFlown()){
-			throw new PassengerException("Unable to cancel seat, passenger state incompatible");
+		//if (this.isNew() || this.isQueued() || this.isRefused()||this.isFlown())
+		if(!this.isConfirmed()){
+			if(this.wasConfirmed()){
+				throw new PassengerException("Unable to cancel seat, passenger state incompatible, Passenger was once confirmed, but is no longer");
+			}else{
+				throw new PassengerException("Unable to cancel seat, passenger state incompatible");
+			}
 		}
 		//check inputs for confirmation and departure time are valid
 		if (cancellationTime <0 || departureTime <cancellationTime ){
@@ -184,6 +189,7 @@ public abstract class Passenger {
 	public void flyPassenger(int departureTime) throws PassengerException {
 		//check passenger state is valid to be changed to flown
 		if (this.isNew() || this.isQueued() || this.isRefused() || this.isFlown()){
+			System.out.println("passenger state was" + this.getState());
 			throw new PassengerException("Unable to set passenger state as flown, passenger state incompatible");
 		}
 		
@@ -442,26 +448,28 @@ public abstract class Passenger {
 		this.flown = p.isFlown();
 		this.inQueue = p.isQueued();
 		
-		//call state based on p's state
-		/*
-		if (p.isNew()){
-			this.newState = true;
-		}else if (p.isQueued()){
-			
-		}else if (p.isConfirmed()){
-			
-		}else if (p.isFlown()){
-			this.
-		}
-		
-		if (p.isQueued()){
-			this.
-		}
-		*/
 	}
 	
 	//Various private helper methods to check arguments and throw exceptions
 	
-	
+	private String getState(){
+		String result = " ";
+		if (this.isNew()){
+			result += "New";
+		}
+		else if (this.inQueue){
+			result += "in Queue";
+		}
+		else if (this.isConfirmed()){
+			result += "is Confirm";
+		}
+		else if (this.isFlown()){
+			result += "is Flown";
+		}
+		else if (this.isRefused()){
+			result += "is Refused";
+		}
+		return result;
+	}
 
 }

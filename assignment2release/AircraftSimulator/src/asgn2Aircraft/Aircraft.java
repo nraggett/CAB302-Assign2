@@ -9,13 +9,8 @@ package asgn2Aircraft;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import asgn2Passengers.Business;
-import asgn2Passengers.Economy;
-import asgn2Passengers.First;
 import asgn2Passengers.Passenger;
 import asgn2Passengers.PassengerException;
-import asgn2Passengers.Premium;
 import asgn2Simulators.Log;
 
 /**
@@ -121,6 +116,8 @@ public abstract class Aircraft {
 		}
 		this.status += Log.setPassengerMsg(p,"C","N");
 		p.cancelSeat(cancellationTime);
+		//must remove passenger from the aircraft here
+		//removePassenger(p);
 	}
 
 	/**
@@ -281,8 +278,45 @@ public abstract class Aircraft {
 	 * @return <code>List<Passenger></code> object containing the passengers.  
 	 */
 	public List<Passenger> getPassengers() {
-		List<Passenger> Passengers = this.seats;
-		return Passengers;
+		
+		//remove passengers from list whos state has been cancelled.
+		List<Passenger> tempList = new ArrayList<Passenger>();
+		
+		for (Passenger p: this.seats){
+			if(p.isConfirmed()){
+				tempList.add(p);
+			}else
+			{
+				String buffer = "";
+				String pass = p.getPassID();
+				for(int j=0; j<2; j++){
+					buffer+= pass.charAt(j);
+				}
+				switch(buffer){
+				case "F:":
+					this.numFirst--;
+					break;
+				case "J:":
+					this.numBusiness--;
+					break;
+				case "P:":
+					this.numPremium--;
+					break;
+				case "Y:":
+					this.numEconomy--;
+					break;
+				default:
+					break;
+				}
+			}
+
+			}
+			this.seats = tempList;
+		
+		
+		
+		List<Passenger> Passengerss = this.seats;
+		return Passengerss;
 	}
 	
 	/**
@@ -398,7 +432,51 @@ public abstract class Aircraft {
 	 * where possible to Premium.  
 	 */
 	public void upgradeBookings() {
+		
+		//remove cancelled passengers
+		//remove passengers from list whos state has been cancelled.
+				List<Passenger> tempList = new ArrayList<Passenger>();
+				
+				for (Passenger p: this.seats){
+					if(p.isConfirmed()){
+						tempList.add(p);
+					}else
+					{
+						String buffer = "";
+						String pass = p.getPassID();
+						for(int j=0; j<2; j++){
+							buffer+= pass.charAt(j);
+						}
+						switch(buffer){
+						case "F:":
+							this.numFirst--;
+							break;
+						case "J:":
+							this.numBusiness--;
+							break;
+						case "P:":
+							this.numPremium--;
+							break;
+						case "Y:":
+							this.numEconomy--;
+							break;
+						default:
+							break;
+						}
+					}
+
+					}
+					this.seats = tempList;
+		
+		
+		
+		
+		
+		
+		
 		for(int i=2; i<=4; i++){
+			
+			
 			for(Passenger p : this.seats){
 				String buffer = null;
 				int type;
@@ -458,4 +536,6 @@ public abstract class Aircraft {
 		String msg = "";
 		return msg + p.noSeatsMsg(); 
 	}
+
+	
 }
