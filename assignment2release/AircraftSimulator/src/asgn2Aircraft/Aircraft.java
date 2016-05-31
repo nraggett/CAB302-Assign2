@@ -116,9 +116,11 @@ public abstract class Aircraft {
 	 * @throws AircraftException if <code>Passenger</code> is not recorded in aircraft seating 
 	 */
 	public void cancelBooking(Passenger p,int cancellationTime) throws PassengerException, AircraftException {
-		//Stuff here
+		if(!seats.contains(p)){
+			throw new AircraftException("Passenger not on aircraft");
+		}
 		this.status += Log.setPassengerMsg(p,"C","N");
-		//Stuff here
+		p.cancelSeat(cancellationTime);
 	}
 
 	/**
@@ -132,9 +134,12 @@ public abstract class Aircraft {
 	 * @throws AircraftException if no seats available in <code>Passenger</code> fare class. 
 	 */
 	public void confirmBooking(Passenger p,int confirmationTime) throws AircraftException, PassengerException { 
-		//Stuff here
+		if(!seatsAvailable(p)){
+			throw new AircraftException(noSeatsAvailableMsg(p));
+		} else{
+			p.confirmSeat(confirmationTime, this.departureTime);
+		}
 		this.status += Log.setPassengerMsg(p,"N/Q","C");
-		//Stuff here
 	}
 	
 	/**
@@ -186,7 +191,9 @@ public abstract class Aircraft {
 	 * See {@link asgn2Passengers.Passenger#flyPassenger(int)}. 
 	 */
 	public void flyPassengers(int departureTime) throws PassengerException { 
-		
+		for(Passenger p : seats) {
+			p.flyPassenger(departureTime);
+		}
 	}
 	
 	/**
