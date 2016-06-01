@@ -116,8 +116,28 @@ public abstract class Aircraft {
 		}
 		this.status += Log.setPassengerMsg(p,"C","N");
 		p.cancelSeat(cancellationTime);
-		//must remove passenger from the aircraft here
-		//removePassenger(p);
+		this.seats.remove(p);
+		String buffer = "";
+		String pass = p.getPassID();
+		for(int j=0; j<2; j++){
+			buffer+= pass.charAt(j);
+		}
+		switch(buffer){
+		case "F:":
+			this.numFirst--;
+			break;
+		case "J:":
+			this.numBusiness--;
+			break;
+		case "P:":
+			this.numPremium--;
+			break;
+		case "Y:":
+			this.numEconomy--;
+			break;
+		default:
+			break;
+		}
 	}
 
 	/**
@@ -278,43 +298,6 @@ public abstract class Aircraft {
 	 * @return <code>List<Passenger></code> object containing the passengers.  
 	 */
 	public List<Passenger> getPassengers() {
-		
-		//remove passengers from list whos state has been cancelled.
-		List<Passenger> tempList = new ArrayList<Passenger>();
-		
-		for (Passenger p: this.seats){
-			if(p.isConfirmed()){
-				tempList.add(p);
-			}else
-			{
-				String buffer = "";
-				String pass = p.getPassID();
-				for(int j=0; j<2; j++){
-					buffer+= pass.charAt(j);
-				}
-				switch(buffer){
-				case "F:":
-					this.numFirst--;
-					break;
-				case "J:":
-					this.numBusiness--;
-					break;
-				case "P:":
-					this.numPremium--;
-					break;
-				case "Y:":
-					this.numEconomy--;
-					break;
-				default:
-					break;
-				}
-			}
-
-			}
-			this.seats = tempList;
-		
-		
-		
 		List<Passenger> Passengerss = this.seats;
 		return Passengerss;
 	}
@@ -432,53 +415,9 @@ public abstract class Aircraft {
 	 * where possible to Premium.  
 	 */
 	public void upgradeBookings() {
-		
-		//remove cancelled passengers
-		//remove passengers from list whos state has been cancelled.
-				List<Passenger> tempList = new ArrayList<Passenger>();
-				
-				for (Passenger p: this.seats){
-					if(p.isConfirmed()){
-						tempList.add(p);
-					}else
-					{
-						String buffer = "";
-						String pass = p.getPassID();
-						for(int j=0; j<2; j++){
-							buffer+= pass.charAt(j);
-						}
-						switch(buffer){
-						case "F:":
-							this.numFirst--;
-							break;
-						case "J:":
-							this.numBusiness--;
-							break;
-						case "P:":
-							this.numPremium--;
-							break;
-						case "Y:":
-							this.numEconomy--;
-							break;
-						default:
-							break;
-						}
-					}
-
-					}
-					this.seats = tempList;
-		
-		
-		
-		
-		
-		
-		
 		for(int i=2; i<=4; i++){
-			
-			
 			for(Passenger p : this.seats){
-				String buffer = null;
+				String buffer = "";
 				int type;
 				String pass = p.getPassID();
 				for(int j=0; j<2; j++){
@@ -505,6 +444,25 @@ public abstract class Aircraft {
 					Passenger pnew = p.upgrade();
 					if(this.seatsAvailable(pnew)){
 						p = pnew;
+						switch(type){
+						case 1:
+//							First can't upgrade
+							break;
+						case 2:
+							this.numBusiness--;
+							this.numFirst++;
+							break;
+						case 3:
+							this.numPremium--;
+							this.numBusiness++;
+							break;
+						case 4:
+							this.numEconomy--;
+							this.numPremium++;
+							break;
+						default:
+							break;
+						}
 					}
 				}
 			}

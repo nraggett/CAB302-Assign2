@@ -394,10 +394,22 @@ public class AircraftTests {
 	 * Test method for filling classes above passengers in order to fit more passengers.
 	 * {UNDERWAY}
 	 * {@link asgn2Aircraft.Aircraft#upgradeBookings()}.
+	 * @throws AircraftException 
+	 * @throws PassengerException 
 	 */
 	@Test
-	public void testUpgradeBookings() {
-		fail("Not yet implemented");
+	public void testUpgradeBookings() throws AircraftException, PassengerException {
+		Aircraft plane = new A380("Testy McTestFace", 1, 1, 2, 3, 4);
+		Passenger DatBoi = new First(1, 1);
+		plane.confirmBooking(DatBoi, 1);
+		Passenger Homeless = new Economy(1, 1);
+		plane.confirmBooking(Homeless, 1);
+		plane.upgradeBookings();
+		if(plane.getNumEconomy() == 0 && plane.getNumFirst() == 1 && plane.getNumPremium() == 1){
+			assertTrue(true);
+		} else {
+			fail("Should return true");
+		}
 	}
 
 }
