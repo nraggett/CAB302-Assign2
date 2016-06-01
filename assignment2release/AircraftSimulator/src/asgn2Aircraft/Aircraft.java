@@ -116,7 +116,11 @@ public abstract class Aircraft {
 		}
 		this.status += Log.setPassengerMsg(p,"C","N");
 		p.cancelSeat(cancellationTime);
+		//remove passenger from plane
 		this.seats.remove(p);
+		
+		
+		//Decrement counter
 		String buffer = "";
 		String pass = p.getPassID();
 		for(int j=0; j<2; j++){
@@ -138,6 +142,7 @@ public abstract class Aircraft {
 		default:
 			break;
 		}
+		
 	}
 
 	/**
@@ -298,7 +303,10 @@ public abstract class Aircraft {
 	 * @return <code>List<Passenger></code> object containing the passengers.  
 	 */
 	public List<Passenger> getPassengers() {
-		List<Passenger> Passengerss = this.seats;
+		List<Passenger> Passengerss = new ArrayList<Passenger>();
+		for( Passenger p:this.seats){
+			Passengerss.add(p);
+		}
 		return Passengerss;
 	}
 	

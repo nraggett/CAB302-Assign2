@@ -12,9 +12,16 @@ import javax.swing.JFrame;
 
 /**
  * @author hogan
- *
+ * @updated by Mitchell
  */
 @SuppressWarnings("serial")
+
+
+
+public static final int WIDTH = 300;
+public static final int HEIGHT = 200;
+
+
 public class GUISimulator extends JFrame implements Runnable {
 
 	/**
