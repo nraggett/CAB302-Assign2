@@ -6,12 +6,14 @@
  */
 package asgn2Simulators;
 
+import asgn2Simulators.Linechart;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -35,6 +37,9 @@ import org.jfree.data.xy.DefaultXYDataset;
 import org.jfree.data.xy.XYDataset;
 
 import com.sun.corba.se.impl.orbutil.graph.Graph;
+
+import asgn2Aircraft.AircraftException;
+import asgn2Passengers.PassengerException;
 
 
 //import guiExploration.FramesAndPanels;
@@ -88,8 +93,11 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	private JLabel labelEconomy;
 	
 	//Define Graphs
-	Graph graph1;
+	//Graph graph1;
 	Graph graph2;
+	
+	//Define Simulator
+	Simulator sim;
 	
 	//Define Text Area for output log
 	private JTextArea textAreaLog;
@@ -99,8 +107,12 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	 * @param arg0
 	 * @throws HeadlessException
 	 */
-	public GUISimulator(String arg0) throws HeadlessException {
+	public GUISimulator(String arg0, Simulator sim) throws HeadlessException, AircraftException, IOException, PassengerException, SimulationException {
 		super(arg0);
+		if(sim != null){
+			this.sim = sim;
+			createGUI(); 
+		}
 		// TODO Auto-generated constructor stub
 	}
 
@@ -108,17 +120,26 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	 * @see java.lang.Runnable#run()
 	 */
 	@Override
-	public void run() {
+	public void run(){
 		// TODO Auto-generated method stub
-		createGUI(); 
+		//createGUI(); 
 	}
 	
 	/**
 	 * @param args
+	 * @throws SimulationException 
+	 * @throws PassengerException 
+	 * @throws IOException 
+	 * @throws AircraftException 
+	 * @throws HeadlessException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws HeadlessException, AircraftException, IOException, PassengerException, SimulationException {
 		JFrame.setDefaultLookAndFeelDecorated(true);
-        SwingUtilities.invokeLater(new GUISimulator("BorderLayout"));
+		Simulator simmy = new Simulator();
+		Log leg = new Log();
+		SimulationRunner sr = new SimulationRunner(simmy, leg);
+		sr.runSimulation();
+        SwingUtilities.invokeLater(new GUISimulator("BorderLayout", simmy));
 	}
 	
 	
@@ -165,7 +186,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	
 
 	
-	private void createGUI() { setSize(WIDTH, HEIGHT); setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); setLayout(new BorderLayout());
+	private void createGUI() throws AircraftException, PassengerException, SimulationException, IOException { 
 	
 	setSize(WIDTH, HEIGHT);
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -228,7 +249,8 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
     
     //Draw Text Area
     textAreaLog.setSize(50, 50);
-    this.getContentPane().add(textAreaLog,BorderLayout.CENTER);
+    Linechart graph1 = new Linechart("Random values", this.sim);
+    this.getContentPane().add(graph1,BorderLayout.CENTER);
     
     //set GUI as visible
     repaint(); 

@@ -9,6 +9,7 @@ package asgn2Simulators;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -29,6 +30,10 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities;
 
+import asgn2Aircraft.AircraftException;
+import asgn2Aircraft.Bookings;
+import asgn2Passengers.PassengerException;
+
 /**
  * Example code based on the Stack Overflow example and the
  * standard JFreeChart demos showing the construction of a time series
@@ -38,16 +43,22 @@ import org.jfree.ui.RefineryUtilities;
  *
  *  */
 @SuppressWarnings("serial")
-public class Linechart extends ApplicationFrame {
+public class Linechart extends JPanel {
 
     private static final String TITLE = "Random Bookings";
+    private Simulator sim;
 
     /**
      * Constructor shares the work with the run method.
      * @param title Frame display title
+     * @throws IOException 
+     * @throws SimulationException 
+     * @throws PassengerException 
+     * @throws AircraftException 
      */
-    public Linechart(final String title, ) {
-        super(title);
+    public Linechart(final String title, Simulator sim) throws AircraftException, PassengerException, SimulationException, IOException {
+        super();
+        this.sim = sim;
         final TimeSeriesCollection dataset = createTimeSeriesData();
         JFreeChart chart = createChart(dataset);
         this.add(new ChartPanel(chart), BorderLayout.CENTER);
@@ -59,8 +70,12 @@ public class Linechart extends ApplicationFrame {
      * Private method creates the dataset. Lots of hack code in the
      * middle, but you should use the labelled code below
 	 * @return collection of time series for the plot
+     * @throws IOException 
+     * @throws SimulationException 
+     * @throws PassengerException 
+     * @throws AircraftException 
 	 */
-	private TimeSeriesCollection createTimeSeriesData() {
+	private TimeSeriesCollection createTimeSeriesData() throws AircraftException, PassengerException, SimulationException, IOException {
 		TimeSeriesCollection tsc = new TimeSeriesCollection();
 		TimeSeries bookTotal = new TimeSeries("Total Bookings");
 		TimeSeries firstTotal = new TimeSeries("First");
@@ -77,46 +92,29 @@ public class Linechart extends ApplicationFrame {
 		int premium = 0;
 		int economy = 0;
 
-		for (int i=0; i<=18*7; i++) {
-			//These lines are important
+		for(int i=21; i<=18*7; i++){
 			cal.set(2016,0,i,6,0);
-	        Date timePoint = cal.getTime();
+			Date timePoint = cal.getTime();
+			Bookings book = sim.getFlightStatus(i);
+			first = book.getNumFirst();
+			business = book.getNumBusiness();
+			premium = book.getNumPremium();
+			economy = book.getNumEconomy();
 
-	        //HACK BEGINS
-	        if (i<9*7) {
-	        	if (randomSuccess(0.2,rng)) {
-	        		economy++;
-	        	}
-	        	if (randomSuccess(0.1,rng)) {
-	        		business++;
-	        	}
-	        } else if (i < 18*7) {
-	        	if (randomSuccess(0.15,rng)) {
-	        		economy++;
-	        	} else if (randomSuccess(0.4,rng)) {
-	        		economy = Math.max(economy-1,0);
-	        	}
-	        	if (randomSuccess(0.05,rng)) {
-	        		business++;
-	        	} else if (randomSuccess(0.2,rng)) {
-	        		business = Math.max(business-1,0);
-	        	}
-	        } else {
-	        	economy=0;
-	        	business =0;
-	        }
-	        //HACK ENDS
-
-	        //This is important - steal it shamelessly
-	    busTotal.add(new Day(timePoint),business);
+	        //This is important - steal it shamelessly - Shamelessly stolen
+			firstTotal.add(new Day(timePoint),first);
+			busTotal.add(new Day(timePoint),business);
+			premTotal.add(new Day(timePoint),premium);
 			econTotal.add(new Day(timePoint),economy);
-			bookTotal.add(new Day(timePoint),economy+business);
+			bookTotal.add(new Day(timePoint),economy+business+premium+first);
 		}
 
 		//Collection
 		tsc.addSeries(bookTotal);
 		tsc.addSeries(econTotal);
+		tsc.addSeries(premTotal);
 		tsc.addSeries(busTotal);
+		tsc.addSeries(firstTotal);
 		return tsc;
 	}
 
@@ -147,20 +145,17 @@ public class Linechart extends ApplicationFrame {
         range.setAutoRange(true);
         return result;
     }
+    
+    public static void run() throws AircraftException, PassengerException, SimulationException, IOException {
+        Linechart demo = new Linechart("Random Bookings", null);
+    }
 
     /**
      * Simple main GUI runner
      * @param args ignored
+     * @throws IOException
      */
-    public static void main(final String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Linechart demo = new Linechart(TITLE);
-                demo.pack();
-                RefineryUtilities.centerFrameOnScreen(demo);
-                demo.setVisible(true);
-            }
-        });
+    public static void main(final String[] args) throws IOException, AircraftException, PassengerException, SimulationException{
+        run();
     }
 }
