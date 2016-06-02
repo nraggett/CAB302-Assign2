@@ -64,7 +64,7 @@ public class Barchart extends JPanel {
      * @throws PassengerException 
      * @throws AircraftException 
      */
-    public Barchart(final String title, Simulator sim) throws AircraftException, PassengerException, SimulationException, IOException {
+    public Barchart(final String title, Simulator sim) throws SimulationException {
         super();
         this.sim = sim;
         final DefaultCategoryDataset dataset = createDataset();
@@ -83,7 +83,7 @@ public class Barchart extends JPanel {
      * @throws PassengerException 
      * @throws AircraftException 
 	 */
-	private DefaultCategoryDataset createDataset() throws AircraftException, PassengerException, SimulationException, IOException {
+	private DefaultCategoryDataset createDataset() throws SimulationException {
 		DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 		
 		
@@ -112,18 +112,6 @@ public class Barchart extends JPanel {
 	
 
 	/**
-	 * Utility method to implement a <a href="http://en.wikipedia.org/wiki/Bernoulli_trial">Bernoulli Trial</a>,
-	 * a coin toss with two outcomes: success (probability successProb) and failure (probability 1-successProb)
-	 * @param successProb double holding the success probability
-	 * @param rng Random object
-	 * @return true if trial was successful, false otherwise
-	 */
-	private boolean randomSuccess(double successProb,Random rng) {
-		boolean result = rng.nextDouble() <= successProb;
-		return result;
-	}
-
-    /**
      * Helper method to deliver the Chart - currently uses default colours and auto range
      * @param dataset TimeSeriesCollection for plotting
      * @returns chart to be added to panel
@@ -137,18 +125,5 @@ public class Barchart extends JPanel {
         ValueAxis range = plot.getRangeAxis();
         range.setAutoRange(true);
         return result;
-    }
-    
-    public static void run() throws AircraftException, PassengerException, SimulationException, IOException {
-        Barchart demo = new Barchart("Random Bookings", null);
-    }
-
-    /**
-     * Simple main GUI runner
-     * @param args ignored
-     * @throws IOException
-     */
-    public static void main(final String[] args) throws IOException, AircraftException, PassengerException, SimulationException{
-        run();
     }
 }
