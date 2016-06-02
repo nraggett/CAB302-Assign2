@@ -108,10 +108,10 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		//Get event source 
-		Object src=e.getSource(); 
-				 
+		Object src=e.getSource(); 			 
 		//Based on the source do an action 
 		if (src== btnRunSimulation) {
+			textAreaLog.setText("");
 			//if inputs are valid
 			if (checkInputs()){
 				//calculate the standard deviation
@@ -150,20 +150,17 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	setSize(WIDTH, HEIGHT);
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
-    
-    System.out.println("create gui point panels");
+
     //Create various panels
     pnlOne = createPanel(Color.BLUE);
     pnlBtn = createPanel(Color.GRAY);
     pnlInputs = createPanel(Color.GREEN);
 
-    System.out.println("create gui point buttons");
     //create various buttons
     btnRunSimulation = createButton("Run Simulation");
     btnChangeChart = createButton("Change Display");
     btnSetDefault = createButton("Set Default Values");
     
-    System.out.println("create gui point labels");
     //Create Various Labels
     labelRNGSEED = createLabel("RNGSEED");
 	labelDailyMean = createLabel("DailyMean");
@@ -174,8 +171,6 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	labelPremium= createLabel("Premium");
 	labelEconomy= createLabel("Economy");
 	
-	System.out.println("create gui point text fields");
-
 	
 	//Create Various Text fields
     textRNGSEED = createTextField();
@@ -373,7 +368,6 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 		double economyProb = Double.parseDouble(textEconomy.getText());
 		double premiumProb = Double.parseDouble(textPremium.getText());
 		double total = (firstProb + businessProb + economyProb+premiumProb);
-		textAreaLog.setText( textAreaLog.getText() +"\n Probabilities sum to "+String.valueOf(total));
 		return(total==1);
 	}
 	
@@ -415,6 +409,8 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 			double chance = Double.parseDouble(Input);
 			if(chance>=0 && chance<=1){
 				return true;
+			}else{
+				textAreaLog.setText( textAreaLog.getText() +"\n First not valid must be between 0 and 1");
 			}
 		}
 		catch (NumberFormatException e) {
@@ -434,6 +430,8 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 			double chance = Double.parseDouble(Input);
 			if(chance>=0 && chance<=1){
 				return true;
+			}else{
+				textAreaLog.setText( textAreaLog.getText() +"\n Premium not valid must be between 0 and 1");
 			}
 		}
 		catch (NumberFormatException e) {
@@ -467,6 +465,8 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 			double chance = Double.parseDouble(Input);
 			if(chance>=0 && chance<=1){
 				return true;
+			}else{
+				textAreaLog.setText( textAreaLog.getText() +"\n Cancellation not valid must be between 0 and 1");
 			}
 		}
 		catch (NumberFormatException e) {
@@ -485,6 +485,8 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 			double chance = Double.parseDouble(Input);
 			if(chance>=0 && chance<=1){
 				return true;
+			}else{
+				textAreaLog.setText( textAreaLog.getText() +"\n Business not valid must be between 0 and 1");
 			}
 		}
 		catch (NumberFormatException e) {
@@ -503,6 +505,8 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 			double chance = Double.parseDouble(Input);
 			if(chance>=0 && chance<=1){
 				return true;
+			}else{
+				textAreaLog.setText( textAreaLog.getText() +"\n Economy not valid must be between 0 and 1");
 			}
 		}
 		catch (NumberFormatException e) {
@@ -552,12 +556,13 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	}
 	
 	public void writeDataToScreen(){
+		//addTextTooScreen(mySim.)
 		//addTextTooScreen(mySim.getSummary(time, flying));
 		
 		
 	}
 	
-	private void addTextTooScreen(String s){
+	public void addTextTooScreen(String s){
 		textAreaLog.setText(textAreaLog.getText() + s);
 	}
 	

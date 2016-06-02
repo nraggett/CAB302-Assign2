@@ -7,6 +7,8 @@
 package asgn2Simulators;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import javax.swing.SwingUtilities;
 
@@ -168,6 +170,14 @@ public class SimulationRunner {
 	 */
 	public void runSimulation() throws AircraftException, PassengerException, SimulationException, IOException {
 		this.sim.createSchedule();
+		
+		String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+		GUI.addTextTooScreen(timeLog + ": Start of Simulation\n");
+		GUI.addTextTooScreen(sim.toString() + "\n");
+		String capacities = sim.getFlights(Constants.FIRST_FLIGHT).initialState();
+		GUI.addTextTooScreen(capacities);
+		
+		
 		this.log.initialEntry(this.sim);
 		//Main simulation loop 
 		for (int time=0; time<=Constants.DURATION; time++) {
@@ -187,10 +197,17 @@ public class SimulationRunner {
 			//Log progresss 
 			GUI.mySim = sim;
 			this.log.logQREntries(time, sim);
+			boolean flying = (time >= Constants.FIRST_FLIGHT);
+			GUI.addTextTooScreen(sim.getSummary(time, flying));
 			this.log.logEntry(time,this.sim);
 		}
 		this.sim.finaliseQueuedAndCancelledPassengers(Constants.DURATION); 
+		GUI.addTextTooScreen(sim.getStatus(Constants.DURATION));
 		this.log.logQREntries(Constants.DURATION, sim);
+		timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+		
+		GUI.addTextTooScreen("\n" + timeLog + ": End of Simulation\n");
+		GUI.addTextTooScreen(sim.finalState());
 		this.log.finalise(this.sim);
 	}
 	
