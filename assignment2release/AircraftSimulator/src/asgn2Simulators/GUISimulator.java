@@ -89,9 +89,10 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	 * @param arg0
 	 * @throws HeadlessException
 	 */
-	public GUISimulator(String arg0) throws HeadlessException {
+	public GUISimulator(String arg0, String[] args) throws HeadlessException {
 		super(arg0);
-		// TODO Auto-generated constructor stub
+		System.out.println("attempting gui constructor");
+		
 	}
 
 	/* (non-Javadoc)
@@ -100,6 +101,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+		System.out.println("run in gui");
 		createGUI(); 
 	}
 	
@@ -107,8 +109,10 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		System.out.println("Main in gui");
 		JFrame.setDefaultLookAndFeelDecorated(true);
-        SwingUtilities.invokeLater(new GUISimulator("BorderLayout"));
+		//String[] test ={};
+        SwingUtilities.invokeLater(new GUISimulator("BorderLayout",args));
 	}
 	
 	
@@ -156,22 +160,24 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 
 	
 	private void createGUI() { setSize(WIDTH, HEIGHT); setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); setLayout(new BorderLayout());
-	
+	System.out.println("start creating gui");
 	setSize(WIDTH, HEIGHT);
 	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
     
+    System.out.println("create gui point panels");
     //Create various panels
     pnlOne = createPanel(Color.BLUE);
     pnlBtn = createPanel(Color.GRAY);
     pnlInputs = createPanel(Color.GREEN);
 
-    
+    System.out.println("create gui point buttons");
     //create various buttons
     btnRunSimulation = createButton("Run Simulation");
     btnChangeChart = createButton("Change Display");
     btnSetDefault = createButton("Set Default Values");
     
+    System.out.println("create gui point labels");
     //Create Various Labels
     labelRNGSEED = createLabel("RNGSEED");
 	labelDailyMean = createLabel("DailyMean");
@@ -182,7 +188,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	labelPremium= createLabel("Premium");
 	labelEconomy= createLabel("Economy");
 	
-	
+	System.out.println("create gui point text fields");
 	//Create Various Text fields
     textRNGSEED = createTextField();
     textDailyMean = createTextField();
@@ -193,6 +199,8 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
     textPremium= createTextField();
     textEconomy= createTextField();
     
+    
+    System.out.println("create gui point 3");
     //create graphs
     //graph1 = new Graph();
     //graph2 = new Graph();
@@ -223,6 +231,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
     //set GUI as visible
     repaint(); 
     this.setVisible(true);
+    System.out.println("finished creating gui");
 
 	}
 	

@@ -8,6 +8,8 @@ package asgn2Simulators;
 
 import java.io.IOException;
 
+import javax.swing.SwingUtilities;
+
 import asgn2Aircraft.AircraftException;
 import asgn2Passengers.PassengerException;
 
@@ -27,19 +29,55 @@ public class SimulationRunner {
 	 */
 	public static void main(String[] args) {
 		final int NUM_ARGS = 9; 
+		
 		Simulator s = null; 
 		Log l = null; 
-		
+		System.out.println(args.length);
 		try {
 			switch (args.length) {
+				case 0: {
+					System.out.println("attempting case 0");
+					runGuiDefault();
+					//s = new Simulator(); 
+					break;
+				}
+				case 1: {
+					System.out.println("attempting case 1");
+					if (args[0]=="true"){
+						//Run gui with defaults
+						runGuiDefault();
+					}else if(args[0]=="false"){
+						//Run as normal
+						s = new Simulator(); 
+						break;					
+					}else{
+						printErrorAndExit();
+					}
+				}
 				case NUM_ARGS: {
+					System.out.println("attempting case 9");
 					s = createSimulatorUsingArgs(args); 
 					break;
 				}
-				case 0: {
-					s = new Simulator(); 
+				case 10: {
+					System.out.println("attempting case 10");
+					String[] simulatorParameters = new String[NUM_ARGS];
+					System.arraycopy(args, 1, simulatorParameters, 0, NUM_ARGS);
+					if (args[0]=="true"){
+						//Run with custom values
+						runGuiCustom(simulatorParameters);
+					}else if(args[0]=="false"){
+						//Run as normal
+						s = new Simulator(); 
+						break;
+						
+					}else{
+						printErrorAndExit();
+					}
+					s = createSimulatorUsingArgs(args); 
 					break;
 				}
+				
 				default: {
 					printErrorAndExit(); 
 				}
@@ -59,6 +97,10 @@ public class SimulationRunner {
 			System.exit(-1);
 		} 
 	}
+	
+	
+	
+	
 	/**
 	 * Helper to process args for Simulator  
 	 * 
@@ -144,5 +186,16 @@ public class SimulationRunner {
 		this.sim.finaliseQueuedAndCancelledPassengers(Constants.DURATION); 
 		this.log.logQREntries(Constants.DURATION, sim);
 		this.log.finalise(this.sim);
+	}
+	
+	
+	private static void runGuiDefault(){
+		String[] emptyString = {};
+		GUISimulator.main(emptyString);
+		//SwingUtilities.invokeLater(new GUISimulator("BorderLayout", emptyString));
+	}
+	
+	private static void runGuiCustom(String[] args){
+		SwingUtilities.invokeLater(new GUISimulator("BorderLayout", args));
 	}
 }
