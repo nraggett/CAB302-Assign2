@@ -28,7 +28,7 @@ import com.sun.corba.se.impl.orbutil.graph.Graph;
 
 
 //import guiExploration.FramesAndPanels;
- 
+
 
 
 
@@ -46,6 +46,8 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	
 	public static final int WIDTH = 500;
 	public static final int HEIGHT = 500;
+	String[] inputArgs;
+	
 	
 	//Define panels
 	private JPanel pnlOne;
@@ -91,7 +93,9 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	 */
 	public GUISimulator(String arg0, String[] args) throws HeadlessException {
 		super(arg0);
-		System.out.println("attempting gui constructor");
+		System.out.println("test");
+		JFrame.setDefaultLookAndFeelDecorated(true);
+		this.inputArgs = args;	
 		
 	}
 
@@ -100,23 +104,9 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	 */
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		System.out.println("run in gui");
 		createGUI(); 
 	}
-	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		System.out.println("Main in gui");
-		JFrame.setDefaultLookAndFeelDecorated(true);
-		//String[] test ={};
-        SwingUtilities.invokeLater(new GUISimulator("BorderLayout",args));
-	}
-	
-	
-	
+
 	
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -151,7 +141,9 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 		} //end simulation button pressed events
 		else if (src == btnSetDefault){
 		textAreaLog.setText("default values set");
-		setToDefault();
+		
+		setInitialValues();
+		
 		}
 	}
 	
@@ -189,13 +181,17 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	labelEconomy= createLabel("Economy");
 	
 	System.out.println("create gui point text fields");
+	System.out.println("create gui point text fields1");
+	
 	//Create Various Text fields
     textRNGSEED = createTextField();
     textDailyMean = createTextField();
     textQueueSize= createTextField();
+    System.out.println("create gui point text fields2");
     textCancellation= createTextField();
     textFirst= createTextField();
     textBusiness= createTextField();
+    System.out.println("create gui point text fields3");
     textPremium= createTextField();
     textEconomy= createTextField();
     
@@ -208,9 +204,6 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
     //create Text Area
      textAreaLog = createTextArea();
 	
-	
-    
-    
     //draw panels
     this.getContentPane().add(pnlOne,BorderLayout.CENTER);
     this.getContentPane().add(pnlBtn,BorderLayout.SOUTH);
@@ -231,7 +224,8 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
     //set GUI as visible
     repaint(); 
     this.setVisible(true);
-    System.out.println("finished creating gui");
+    
+    setToDefault();
 
 	}
 	
@@ -243,6 +237,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	
 	//creates text field
 	private JTextField createTextField() {
+		System.out.println("creating a text field");
 		JTextField jta = new JTextField("Enter Value Here");
 		jta.setFont(new Font("Arial",Font.PLAIN,12));
 		//jta.setBorder(BorderFactory.createEtchedBorder());
@@ -543,6 +538,21 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	
 	private void changeDisplay(){
 		
+	}
+	
+	private void setInitialValues(){
+		if (this.inputArgs.length==0){
+		setToDefault();
+		}{
+			textRNGSEED.setText(this.inputArgs[0]);
+			textQueueSize.setText(this.inputArgs[1]);
+			textDailyMean.setText(this.inputArgs[2]);
+			textFirst.setText(this.inputArgs[4]);
+			textBusiness.setText(this.inputArgs[5]);
+			textPremium.setText(this.inputArgs[6]);
+			textEconomy.setText(this.inputArgs[7]);
+			textCancellation.setText(this.inputArgs[8]);
+		}
 	}
 	
 }

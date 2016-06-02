@@ -17,7 +17,7 @@ import asgn2Passengers.PassengerException;
  * Class to operate the simulation, taking parameters and utility methods from the Simulator
  * to control the available resources, and using Log to provide a record of operation. 
  * 
- * @author hogan
+ * @author Mitchell and Nathan
  *
  */ 
 public class SimulationRunner {
@@ -29,20 +29,16 @@ public class SimulationRunner {
 	 */
 	public static void main(String[] args) {
 		final int NUM_ARGS = 9; 
-		
 		Simulator s = null; 
 		Log l = null; 
-		System.out.println(args.length);
 		try {
 			switch (args.length) {
 				case 0: {
-					System.out.println("attempting case 0");
 					runGuiDefault();
 					//s = new Simulator(); 
 					break;
 				}
 				case 1: {
-					System.out.println("attempting case 1");
 					if (args[0]=="true"){
 						//Run gui with defaults
 						runGuiDefault();
@@ -55,12 +51,19 @@ public class SimulationRunner {
 					}
 				}
 				case NUM_ARGS: {
-					System.out.println("attempting case 9");
-					s = createSimulatorUsingArgs(args); 
+					s = createSimulatorUsingArgs(args);
+					l = new Log();
+					//Run the simulation 
+					SimulationRunner sr = new SimulationRunner(s,l);			
+					try {
+						sr.runSimulation();
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.exit(-1);
+					} 
 					break;
 				}
 				case 10: {
-					System.out.println("attempting case 10");
 					String[] simulatorParameters = new String[NUM_ARGS];
 					System.arraycopy(args, 1, simulatorParameters, 0, NUM_ARGS);
 					if (args[0]=="true"){
@@ -77,25 +80,18 @@ public class SimulationRunner {
 					s = createSimulatorUsingArgs(args); 
 					break;
 				}
-				
 				default: {
 					printErrorAndExit(); 
 				}
 			}
+
 			l = new Log();
 		} catch (SimulationException | IOException e1) {
 			e1.printStackTrace();
 			System.exit(-1);
 		}
 	
-		//Run the simulation 
-		SimulationRunner sr = new SimulationRunner(s,l);
-		try {
-			sr.runSimulation();
-		} catch (Exception e) {
-			e.printStackTrace();
-			System.exit(-1);
-		} 
+		
 	}
 	
 	
@@ -120,7 +116,8 @@ public class SimulationRunner {
 		double economyProb = Double.parseDouble(args[7]);
 		double cancelProb = Double.parseDouble(args[8]);
 		return new Simulator(seed,maxQueueSize,meanBookings,sdBookings,firstProb,businessProb,
-						  premiumProb,economyProb,cancelProb);	
+						  premiumProb,economyProb,cancelProb);
+		
 	}
 	
 	/**
@@ -163,7 +160,6 @@ public class SimulationRunner {
 	public void runSimulation() throws AircraftException, PassengerException, SimulationException, IOException {
 		this.sim.createSchedule();
 		this.log.initialEntry(this.sim);
-		
 		//Main simulation loop 
 		for (int time=0; time<=Constants.DURATION; time++) {
 			this.sim.resetStatus(time); 
@@ -188,11 +184,9 @@ public class SimulationRunner {
 		this.log.finalise(this.sim);
 	}
 	
-	
 	private static void runGuiDefault(){
 		String[] emptyString = {};
-		GUISimulator.main(emptyString);
-		//SwingUtilities.invokeLater(new GUISimulator("BorderLayout", emptyString));
+		SwingUtilities.invokeLater(new GUISimulator("BorderLayout", emptyString));
 	}
 	
 	private static void runGuiCustom(String[] args){
