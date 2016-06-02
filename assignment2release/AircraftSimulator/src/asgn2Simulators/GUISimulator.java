@@ -91,6 +91,16 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	 */
 	public GUISimulator(String arg0, String[] args) throws HeadlessException {
 		super(arg0);
+		createGUI();
+		textRNGSEED.setText(args[0]);
+		textQueueSize.setText(args[1]);
+	    textDailyMean.setText(args[2]);
+	    
+	    textFirst.setText(args[4]);
+	    textBusiness.setText(args[5]);
+	    textPremium.setText(args[6]);
+	    textEconomy.setText(args[7]);
+	    textCancellation.setText(args[8]);
 		System.out.println("attempting gui constructor");
 		
 	}
@@ -109,10 +119,12 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println("Main in gui");
-		JFrame.setDefaultLookAndFeelDecorated(true);
-		//String[] test ={};
-        SwingUtilities.invokeLater(new GUISimulator("BorderLayout",args));
+		String[] entrystring = {"true", "100", "500", "1300", "0.33", "0.03", "0.14", "0.13", "0.70", "0.10"};
+		SimulationRunner.main(entrystring);
+//		System.out.println("Main in gui");
+//		JFrame.setDefaultLookAndFeelDecorated(true);
+//		//String[] test ={};
+//        SwingUtilities.invokeLater(new GUISimulator("BorderLayout",args));
 	}
 	
 	

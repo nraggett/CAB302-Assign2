@@ -74,7 +74,7 @@ public class SimulationRunner {
 					}else{
 						printErrorAndExit();
 					}
-					s = createSimulatorUsingArgs(args); 
+					s = createSimulatorUsingArgs(simulatorParameters); 
 					break;
 				}
 				
