@@ -11,18 +11,12 @@ import javax.swing.JPanel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+
 
 import com.sun.corba.se.impl.orbutil.graph.Graph;
 
@@ -46,8 +40,8 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	
 	public static final int WIDTH = 500;
 	public static final int HEIGHT = 500;
+	public Simulator mySim;
 	String[] inputArgs;
-	
 	
 	//Define panels
 	private JPanel pnlOne;
@@ -141,9 +135,9 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 		} //end simulation button pressed events
 		else if (src == btnSetDefault){
 		textAreaLog.setText("default values set");
-		
 		setInitialValues();
-		
+		}else if (src == btnChangeChart){
+			changeDisplay();
 		}
 	}
 	
@@ -181,26 +175,18 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	labelEconomy= createLabel("Economy");
 	
 	System.out.println("create gui point text fields");
-	System.out.println("create gui point text fields1");
+
 	
 	//Create Various Text fields
     textRNGSEED = createTextField();
     textDailyMean = createTextField();
     textQueueSize= createTextField();
-    System.out.println("create gui point text fields2");
     textCancellation= createTextField();
     textFirst= createTextField();
     textBusiness= createTextField();
-    System.out.println("create gui point text fields3");
     textPremium= createTextField();
     textEconomy= createTextField();
-    
-    
-    System.out.println("create gui point 3");
-    //create graphs
-    //graph1 = new Graph();
-    //graph2 = new Graph();
-    
+   
     //create Text Area
      textAreaLog = createTextArea();
 	
@@ -208,8 +194,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
     this.getContentPane().add(pnlOne,BorderLayout.CENTER);
     this.getContentPane().add(pnlBtn,BorderLayout.SOUTH);
     this.getContentPane().add(pnlInputs,BorderLayout.NORTH);
-    //pnlInputs.add(pnlLeftInputs,BorderLayout.WEST);
-    //pnlInputs.add(pnlRightInputs,BorderLayout.SOUTH);
+
 
     //draw buttons to screen
     layoutButtonPanel();
@@ -237,18 +222,14 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	
 	//creates text field
 	private JTextField createTextField() {
-		System.out.println("creating a text field");
 		JTextField jta = new JTextField("Enter Value Here");
 		jta.setFont(new Font("Arial",Font.PLAIN,12));
-		//jta.setBorder(BorderFactory.createEtchedBorder());
-		//jta.setSize(new Dimension(350,100));
 		return jta;
 	}
 	
 	//used to create panels
 	private JPanel createPanel(Color c) {
 		JPanel jp = new JPanel();
-		
 		jp.setBackground(c);
 		return jp;
 	}
@@ -365,7 +346,6 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
    
 	
 	private boolean checkInputs(){
-		
 		boolean inputsValidNum = (checkRNGSEED()&&
 				checkQueueSize()&&
 				checkFirst()&&
@@ -383,6 +363,9 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 		
 	}
 	
+	
+	//check that all the probabilities of passengers selecting a fare
+	//class sum to one.
 	private boolean checkProbabilitiesAddUpToOne(){
 		
 		double firstProb = Double.parseDouble(textFirst.getText());
@@ -392,11 +375,10 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 		double total = (firstProb + businessProb + economyProb+premiumProb);
 		textAreaLog.setText( textAreaLog.getText() +"\n Probabilities sum to "+String.valueOf(total));
 		return(total==1);
-		
-		
 	}
 	
 	
+	//check the provided value for RNGSEED is valid
 	private boolean checkRNGSEED(){
 		String Input = textRNGSEED.getText();
 		//ensure RNGSEED is an integer
@@ -411,6 +393,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 
 	}
    
+	//check the provided value for QueueSize is valid
 	private boolean checkQueueSize(){
 		String Input = textQueueSize.getText();
 		//ensure RNGSEED is an integer
@@ -424,7 +407,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 		return true;
 
 	}
-	
+	//check the provided value for probability of booking first class is valid
 	private boolean checkFirst(){
 		String Input = textFirst.getText();
 		//ensure RNGSEED is an integer
@@ -442,6 +425,8 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 		return true;
 	}
 	
+	
+	//check the provided value for probability of selecting premium is valid
 	private boolean checkPremium(){
 		String Input = textPremium.getText();
 		//ensure RNGSEED is an integer
@@ -459,6 +444,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 		return true;
 	}
   	
+	//check the number provided for the daily mean is valid
 	private boolean checkDailyMean(){
 		String Input = textDailyMean.getText();
 		//ensure RNGSEED is an integer
@@ -473,6 +459,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 		return true;
 	}
 	
+	//check that the chance of cancellation is a valid percentatge
 	private boolean checkCancellation(){
 		String Input = textCancellation.getText();
 		//ensure RNGSEED is an integer
@@ -490,6 +477,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 		return true;
 	}
 	
+	//check the the probability of booking a business seat is valid
 	private boolean checkBusiness(){
 		String Input = textBusiness.getText();
 		//ensure RNGSEED is an integer
@@ -507,6 +495,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 		return true;
 	}
 	
+	//check the the probability of booking an Economy seat is valid
 	private boolean checkEconomy(){
 		String Input = textEconomy.getText();
 		//ensure RNGSEED is an integer
@@ -524,6 +513,8 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 		return true;
 	}
 	
+	
+	//sets values in the GUI fields to the default values provided by Jim
 	private void setToDefault(){
 		textRNGSEED.setText("100");
 		textQueueSize.setText("500");
@@ -536,8 +527,13 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	
 	}
 	
+	//Rotates between the output log, and each of the graphs
 	private void changeDisplay(){
-		
+		if (textAreaLog.isVisible()){
+			textAreaLog.setVisible(false);
+		}else {
+			textAreaLog.setVisible(true);
+		}
 	}
 	
 	private void setInitialValues(){
@@ -553,6 +549,16 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 			textEconomy.setText(this.inputArgs[7]);
 			textCancellation.setText(this.inputArgs[8]);
 		}
+	}
+	
+	public void writeDataToScreen(){
+		//addTextTooScreen(mySim.getSummary(time, flying));
+		
+		
+	}
+	
+	private void addTextTooScreen(String s){
+		textAreaLog.setText(textAreaLog.getText() + s);
 	}
 	
 }

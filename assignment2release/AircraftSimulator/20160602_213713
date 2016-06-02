@@ -1,4 +1,4 @@
-20160602_205118: Start of Simulation
+20160602_213713: Start of Simulation
 Simulator [meanDailyBookings=1300.0, sdDailyBookings=429.0, seed=100, firstProb=0.03, businessProb=0.14, premiumProb=0.13, economyProb=0.7, maxQueueSize=500, cancellationProb=0.1]
 A380:QF11:21 Capacity: 484 [F: 14 J: 64 P: 35 Y: 371]
 A380:QF93:21 Capacity: 484 [F: 14 J: 64 P: 35 Y: 371]
@@ -131,5 +131,5 @@ B747:QF15:21 Capacity: 353 [F: 14 J: 52 P: 32 Y: 255]
 125:781:F42:J180:P102:Y872:T1196:E125:Q496:R36958
 126:1584:F42:J180:P102:Y855:T1179:E142:Q496:R38667
 
-20160602_205119: End of Simulation
+20160602_213714: End of Simulation
 Final Totals: [F4424:J18922:P10652:Y88120:T122118:E17908:R39305]

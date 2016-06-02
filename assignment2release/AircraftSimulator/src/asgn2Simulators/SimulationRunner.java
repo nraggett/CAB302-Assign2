@@ -21,12 +21,17 @@ import asgn2Passengers.PassengerException;
  *
  */ 
 public class SimulationRunner {
+	static GUISimulator GUI;
+	
+	
 	/**
 	 * Main program for the simulation 
 	 * 
 	 * @param args Arguments to the simulation - 
 	 * see {@link asgn2Simulators.SimulationRunner#printErrorAndExit()}
 	 */
+	
+	
 	public static void main(String[] args) {
 		final int NUM_ARGS = 9; 
 		Simulator s = null; 
@@ -34,11 +39,13 @@ public class SimulationRunner {
 		try {
 			switch (args.length) {
 				case 0: {
+					System.out.println("case 0");
 					runGuiDefault();
 					//s = new Simulator(); 
 					break;
 				}
 				case 1: {
+					System.out.println("case 1");
 					if (args[0]=="true"){
 						//Run gui with defaults
 						runGuiDefault();
@@ -51,6 +58,7 @@ public class SimulationRunner {
 					}
 				}
 				case NUM_ARGS: {
+					System.out.println("case 9");
 					s = createSimulatorUsingArgs(args);
 					l = new Log();
 					//Run the simulation 
@@ -64,6 +72,7 @@ public class SimulationRunner {
 					break;
 				}
 				case 10: {
+					System.out.println("case 10");
 					String[] simulatorParameters = new String[NUM_ARGS];
 					System.arraycopy(args, 1, simulatorParameters, 0, NUM_ARGS);
 					if (args[0]=="true"){
@@ -175,7 +184,8 @@ public class SimulationRunner {
 			} else {
 				this.sim.processQueue(time);
 			}
-			//Log progress 
+			//Log progresss 
+			GUI.mySim = sim;
 			this.log.logQREntries(time, sim);
 			this.log.logEntry(time,this.sim);
 		}
@@ -186,10 +196,12 @@ public class SimulationRunner {
 	
 	private static void runGuiDefault(){
 		String[] emptyString = {};
-		SwingUtilities.invokeLater(new GUISimulator("BorderLayout", emptyString));
+		GUI = new GUISimulator("BorderLayout", emptyString);
+		SwingUtilities.invokeLater(GUI);
 	}
 	
 	private static void runGuiCustom(String[] args){
-		SwingUtilities.invokeLater(new GUISimulator("BorderLayout", args));
+		GUI = new GUISimulator("BorderLayout", args);
+		SwingUtilities.invokeLater(GUI);
 	}
 }
