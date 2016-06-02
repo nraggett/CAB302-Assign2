@@ -3,7 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="C:/Users/Mitchell/Desktop/Mitchells 302/CAB302-Assign2/jcommon-1.0.23.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Mitchell/Desktop/Mitchells 302/CAB302-Assign2/jfreechart-1.0.19.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nragg/Documents/302 github/CAB302-Assign2/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="C:/Users/nragg/Documents/302 github/CAB302-Assign2/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

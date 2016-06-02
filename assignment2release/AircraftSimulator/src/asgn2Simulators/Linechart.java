@@ -43,7 +43,7 @@ import asgn2Passengers.PassengerException;
  *
  *  */
 @SuppressWarnings("serial")
-public class Linechart extends JPanel {
+public class Linechart extends ApplicationFrame {
 
     private static final String TITLE = "Random Bookings";
     private Simulator sim;
@@ -57,7 +57,7 @@ public class Linechart extends JPanel {
      * @throws AircraftException 
      */
     public Linechart(final String title, Simulator sim) throws SimulationException {
-        super();
+        super(title);
         this.sim = sim;
         final TimeSeriesCollection dataset = createTimeSeriesData();
         JFreeChart chart = createChart(dataset);

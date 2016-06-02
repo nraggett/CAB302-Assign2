@@ -51,7 +51,7 @@ import asgn2Passengers.PassengerException;
  *
  *  */
 @SuppressWarnings("serial")
-public class Barchart extends JPanel {
+public class Barchart extends ApplicationFrame {
 
     private static final String TITLE = "Random Bookings";
     private Simulator sim;
@@ -65,7 +65,7 @@ public class Barchart extends JPanel {
      * @throws AircraftException 
      */
     public Barchart(final String title, Simulator sim) throws SimulationException {
-        super();
+        super(title);
         this.sim = sim;
         final DefaultCategoryDataset dataset = createDataset();
         JFreeChart chart = ChartFactory.createBarChart("Bar Chart", "X axis", "Y axis", dataset);

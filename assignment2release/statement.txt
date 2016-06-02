@@ -1,0 +1,7 @@
+Students engaged in this project:
+Nathan Raggett - n8865523
+Mitchell Neill - n8622060
+
+Nathan Contribution:
+I wrote the aircraft code and testing code, as well
+as 

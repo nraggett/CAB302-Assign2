@@ -12,6 +12,8 @@ import java.util.Calendar;
 
 import javax.swing.SwingUtilities;
 
+import org.jfree.ui.RefineryUtilities;
+
 import asgn2Aircraft.AircraftException;
 import asgn2Passengers.PassengerException;
 
@@ -170,7 +172,6 @@ public class SimulationRunner {
 	 */
 	public void runSimulation() throws AircraftException, PassengerException, SimulationException, IOException {
 		this.sim.createSchedule();
-		
 		String timeLog = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
 		GUI.addTextTooScreen(timeLog + ": Start of Simulation\n");
 		GUI.addTextTooScreen(sim.toString() + "\n");
@@ -201,6 +202,14 @@ public class SimulationRunner {
 			GUI.addTextTooScreen(sim.getSummary(time, flying));
 			this.log.logEntry(time,this.sim);
 		}
+		Linechart dummytest = new Linechart("Random Data", this.sim);
+		dummytest.pack();
+        RefineryUtilities.centerFrameOnScreen(dummytest);
+        dummytest.setVisible(true);
+		Barchart dummytest1 = new Barchart("Random Data", this.sim);
+		dummytest1.pack();
+        RefineryUtilities.centerFrameOnScreen(dummytest1);
+        dummytest1.setVisible(true);
 		this.sim.finaliseQueuedAndCancelledPassengers(Constants.DURATION); 
 		GUI.addTextTooScreen(sim.getStatus(Constants.DURATION));
 		this.log.logQREntries(Constants.DURATION, sim);
