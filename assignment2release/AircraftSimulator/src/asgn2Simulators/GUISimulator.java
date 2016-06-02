@@ -24,6 +24,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.JFreeChart;
+import org.jfree.ui.ApplicationFrame;
+import org.jfree.ui.RefineryUtilities;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.DefaultXYDataset;
+import org.jfree.data.xy.XYDataset;
+
 import com.sun.corba.se.impl.orbutil.graph.Graph;
 
 
@@ -175,7 +185,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
     //graph2 = new Graph();
     
     //create Text Area
-     textAreaLog =
+//     textAreaLog =
 	
 	
     
@@ -207,10 +217,11 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	
 	//creates text areas
 	private JTextField createTextField() {
-		JTextField jta = new JTextField("enter amount,1"); 
+		JTextField jta = new JTextField(20); 
 		jta.setFont(new Font("Arial",Font.PLAIN,12));
 		//jta.setBorder(BorderFactory.createEtchedBorder());
 		jta.setSize(350,100);
+		jta.setColumns(20);
 		return jta;
 	}
 	
@@ -335,6 +346,20 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	    
 	    
 	}
+	
+	private XYDataset createDataset() {
+
+        DefaultXYDataset ds = new DefaultXYDataset();
+
+        for(int day = 1; day < 100; day++){
+        	
+        }
+        
+
+        return ds;
+    }
+	
+	
    
    
    
