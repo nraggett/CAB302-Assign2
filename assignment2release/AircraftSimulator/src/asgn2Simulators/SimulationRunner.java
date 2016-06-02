@@ -6,7 +6,10 @@
  */
 package asgn2Simulators;
 
+import java.awt.HeadlessException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.SwingUtilities;
 
@@ -21,13 +24,18 @@ import asgn2Passengers.PassengerException;
  *
  */ 
 public class SimulationRunner {
+	
+	
 	/**
 	 * Main program for the simulation 
 	 * 
 	 * @param args Arguments to the simulation - 
 	 * see {@link asgn2Simulators.SimulationRunner#printErrorAndExit()}
+	 * @throws PassengerException 
+	 * @throws AircraftException 
+	 * @throws HeadlessException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws HeadlessException, AircraftException, PassengerException {
 		final int NUM_ARGS = 9; 
 		
 		Simulator s = null; 
@@ -136,7 +144,7 @@ public class SimulationRunner {
 	}
 	
 	
-	private Simulator sim;
+	private static Simulator sim;
 	private Log log; 
 
 	/**
@@ -189,13 +197,14 @@ public class SimulationRunner {
 	}
 	
 	
-	private static void runGuiDefault(){
+	private static void runGuiDefault() throws HeadlessException, AircraftException, PassengerException{
 		String[] emptyString = {};
 		GUISimulator.main(emptyString);
 		//SwingUtilities.invokeLater(new GUISimulator("BorderLayout", emptyString));
 	}
 	
-	private static void runGuiCustom(String[] args){
-		SwingUtilities.invokeLater(new GUISimulator("BorderLayout", args));
+	private static void runGuiCustom(String[] args) throws HeadlessException, AircraftException, PassengerException, SimulationException, IOException{
+		Simulator sim1 = new Simulator();
+		SwingUtilities.invokeLater(new GUISimulator("BorderLayout", args, sim1));
 	}
 }

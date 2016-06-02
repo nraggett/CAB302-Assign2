@@ -47,6 +47,8 @@ public class Simulator {
 		return result;
 	}
 	
+	public List<Integer> queues = new ArrayList<Integer>();
+	
 	private double meanDailyBookings;
 	private double sdDailyBookings; 
 	private int seed;
@@ -324,6 +326,7 @@ public class Simulator {
 		} 
 		str += ":Q" + this.numInQueue() +
 			   ":R" + this.numRefused() +"\n";
+		queues.add(this.numInQueue());
 		return str; 
 	}
 	
