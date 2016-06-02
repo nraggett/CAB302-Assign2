@@ -56,7 +56,7 @@ public class Linechart extends JPanel {
      * @throws PassengerException 
      * @throws AircraftException 
      */
-    public Linechart(final String title, Simulator sim) throws AircraftException, PassengerException, SimulationException, IOException {
+    public Linechart(final String title, Simulator sim) throws SimulationException {
         super();
         this.sim = sim;
         final TimeSeriesCollection dataset = createTimeSeriesData();
@@ -75,7 +75,7 @@ public class Linechart extends JPanel {
      * @throws PassengerException 
      * @throws AircraftException 
 	 */
-	private TimeSeriesCollection createTimeSeriesData() throws AircraftException, PassengerException, SimulationException, IOException {
+	private TimeSeriesCollection createTimeSeriesData() throws SimulationException {
 		TimeSeriesCollection tsc = new TimeSeriesCollection();
 		TimeSeries bookTotal = new TimeSeries("Total Bookings");
 		TimeSeries firstTotal = new TimeSeries("First");
@@ -85,8 +85,7 @@ public class Linechart extends JPanel {
 		TimeSeries freeTotal = new TimeSeries("Free");
 
 		//Base time, data set up - the calendar is needed for the time points
-		Calendar cal = GregorianCalendar.getInstance();
-		Random rng = new Random(250); 
+		Calendar cal = GregorianCalendar.getInstance(); 
 
 		int first = 0;
 		int business = 0;
@@ -124,18 +123,6 @@ public class Linechart extends JPanel {
 	}
 
 	/**
-	 * Utility method to implement a <a href="http://en.wikipedia.org/wiki/Bernoulli_trial">Bernoulli Trial</a>,
-	 * a coin toss with two outcomes: success (probability successProb) and failure (probability 1-successProb)
-	 * @param successProb double holding the success probability
-	 * @param rng Random object
-	 * @return true if trial was successful, false otherwise
-	 */
-	private boolean randomSuccess(double successProb,Random rng) {
-		boolean result = rng.nextDouble() <= successProb;
-		return result;
-	}
-
-    /**
      * Helper method to deliver the Chart - currently uses default colours and auto range
      * @param dataset TimeSeriesCollection for plotting
      * @returns chart to be added to panel
@@ -151,16 +138,4 @@ public class Linechart extends JPanel {
         return result;
     }
     
-    public static void run() throws AircraftException, PassengerException, SimulationException, IOException {
-        Linechart demo = new Linechart("Random Bookings", null);
-    }
-
-    /**
-     * Simple main GUI runner
-     * @param args ignored
-     * @throws IOException
-     */
-    public static void main(final String[] args) throws IOException, AircraftException, PassengerException, SimulationException{
-        run();
-    }
 }
