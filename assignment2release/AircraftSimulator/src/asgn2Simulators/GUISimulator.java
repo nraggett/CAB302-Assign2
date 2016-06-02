@@ -65,6 +65,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	//Define Buttons
 	private JButton btnRunSimulation;
 	private JButton btnChangeChart;
+	private JButton btnSetDefault;
 	
 	//Define Text inputs
 	private JTextField textRNGSEED;
@@ -133,8 +134,30 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 				 
 		//Based on the source do an action 
 		if (src== btnRunSimulation) {
-			String[] test = {};
-	        SimulationRunner.main(test);
+			//if inputs are valid
+			if (checkInputs()){
+				//calculate the standard deviation
+				double std = 0.33*Integer.parseInt(textDailyMean.getText());
+				String[] test = new String[9];
+				test[0] =textRNGSEED.getText();
+				test[1] =textQueueSize.getText();
+				test[2] =textDailyMean.getText();
+				test[3] = String.valueOf(std);
+				test[4] =textFirst.getText();
+				test[5] =textBusiness.getText();
+				test[6] =textPremium.getText();
+				test[7] =textEconomy.getText();
+				test[8] =textCancellation.getText();
+		        SimulationRunner.main(test);
+		        
+			}else{
+				textAreaLog.setText( textAreaLog.getText() +"\n Inputs are not valid");
+			}
+			
+		} //end simulation button pressed events
+		else if (src == btnSetDefault){
+		textAreaLog.setText("default values set");
+		setToDefault();
 		}
 	}
 	
@@ -156,8 +179,8 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
     
     //create various buttons
     btnRunSimulation = createButton("Run Simulation");
-    btnChangeChart = createButton("Change Chart");
-    
+    btnChangeChart = createButton("Change Display");
+    btnSetDefault = createButton("Set Default Values");
     
     //Create Various Labels
     labelRNGSEED = createLabel("RNGSEED");
@@ -185,7 +208,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
     //graph2 = new Graph();
     
     //create Text Area
-//     textAreaLog =
+     textAreaLog = createTextArea();
 	
 	
     
@@ -203,6 +226,10 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
     //Draw labels and text input to screen
     layoutInputsPanel();
     
+    //Draw Text Area
+    textAreaLog.setSize(50, 50);
+    this.getContentPane().add(textAreaLog,BorderLayout.CENTER);
+    
     //set GUI as visible
     repaint(); 
     this.setVisible(true);
@@ -215,13 +242,12 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	// used to create components for the GUI, from week 8 lab
 	//******************************************************************
 	
-	//creates text areas
+	//creates text field
 	private JTextField createTextField() {
-		JTextField jta = new JTextField(20); 
+		JTextField jta = new JTextField("Enter Value Here");
 		jta.setFont(new Font("Arial",Font.PLAIN,12));
 		//jta.setBorder(BorderFactory.createEtchedBorder());
-		jta.setSize(350,100);
-		jta.setColumns(20);
+		//jta.setSize(new Dimension(350,100));
 		return jta;
 	}
 	
@@ -240,13 +266,14 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 		return jb; 
 	}
 	
-	//create a text area
+	//create the text area
 	private JTextArea createTextArea() {
 		JTextArea jta = new JTextArea(); 
 		jta.setEditable(false);
 		jta.setLineWrap(true);
 		jta.setFont(new Font("Arial",Font.BOLD,12));
 		jta.setBorder(BorderFactory.createEtchedBorder());
+		jta.setText("Will paste log here once ran");
 		return jta;
 	}
    
@@ -299,6 +326,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	    
 	    addToPanel(pnlBtn, btnRunSimulation,constraints,0,0,2,1); 
 	    addToPanel(pnlBtn, btnChangeChart,constraints,3,0,2,1); 
+	    addToPanel(pnlBtn, btnSetDefault,constraints,6,0,2,1); 
 
 	}
    
@@ -337,13 +365,7 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	    addToPanel(pnlInputs, textBusiness,constraints,10,4,2,1); 
 	    addToPanel(pnlInputs, textPremium,constraints,6,6,2,1); 
 	    addToPanel(pnlInputs, textEconomy,constraints,10,6,2,1); 
-	    
-	    
-	    
 
-	    
-	    
-	    
 	    
 	}
 	
@@ -361,7 +383,181 @@ public class GUISimulator extends JFrame implements ActionListener, Runnable {
 	
 	
    
+	
+	private boolean checkInputs(){
+		
+		boolean inputsValidNum = (checkRNGSEED()&&
+				checkQueueSize()&&
+				checkFirst()&&
+				checkPremium()&&
+				checkDailyMean()&&
+				checkCancellation()&&
+				checkBusiness()&&
+				checkEconomy());
+				
+		if (!inputsValidNum){
+			return false;
+		}
+		
+		return (checkProbabilitiesAddUpToOne());		
+		
+	}
+	
+	private boolean checkProbabilitiesAddUpToOne(){
+		
+		double firstProb = Double.parseDouble(textFirst.getText());
+		double businessProb = Double.parseDouble(textBusiness.getText());
+		double economyProb = Double.parseDouble(textEconomy.getText());
+		double premiumProb = Double.parseDouble(textPremium.getText());
+		double total = (firstProb + businessProb + economyProb+premiumProb);
+		textAreaLog.setText( textAreaLog.getText() +"\n Probabilities sum to "+String.valueOf(total));
+		return(total==1);
+		
+		
+	}
+	
+	
+	private boolean checkRNGSEED(){
+		String Input = textRNGSEED.getText();
+		//ensure RNGSEED is an integer
+		try {
+			Integer.parseInt(Input);
+		}
+		catch (NumberFormatException e) {
+			textAreaLog.setText( textAreaLog.getText() +"\n RNGSEED not valid");
+			return false;
+		}
+		return true;
+
+	}
    
-   
+	private boolean checkQueueSize(){
+		String Input = textQueueSize.getText();
+		//ensure RNGSEED is an integer
+		try {
+			Integer.parseInt(Input);
+		}
+		catch (NumberFormatException e) {
+			textAreaLog.setText( textAreaLog.getText() +"\n QueueSize not valid");
+			return false;
+		}
+		return true;
+
+	}
+	
+	private boolean checkFirst(){
+		String Input = textFirst.getText();
+		//ensure RNGSEED is an integer
+		try {
+			double chance = Double.parseDouble(Input);
+			if(chance>=0 && chance<=1){
+				return true;
+			}
+		}
+		catch (NumberFormatException e) {
+			textAreaLog.setText( textAreaLog.getText() +"\n First not valid");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean checkPremium(){
+		String Input = textPremium.getText();
+		//ensure RNGSEED is an integer
+		try {
+			double chance = Double.parseDouble(Input);
+			if(chance>=0 && chance<=1){
+				return true;
+			}
+		}
+		catch (NumberFormatException e) {
+			textAreaLog.setText( textAreaLog.getText() +"\n Premium not valid");
+			return false;
+		}
+		
+		return true;
+	}
+  	
+	private boolean checkDailyMean(){
+		String Input = textDailyMean.getText();
+		//ensure RNGSEED is an integer
+		try {
+			Integer.parseInt(Input);
+		}
+		catch (NumberFormatException e) {
+			textAreaLog.setText( textAreaLog.getText() +"\n DailyMean not valid");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean checkCancellation(){
+		String Input = textCancellation.getText();
+		//ensure RNGSEED is an integer
+		try {
+			double chance = Double.parseDouble(Input);
+			if(chance>=0 && chance<=1){
+				return true;
+			}
+		}
+		catch (NumberFormatException e) {
+			textAreaLog.setText( textAreaLog.getText() +"\n Cancellation not valid");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean checkBusiness(){
+		String Input = textBusiness.getText();
+		//ensure RNGSEED is an integer
+		try {
+			double chance = Double.parseDouble(Input);
+			if(chance>=0 && chance<=1){
+				return true;
+			}
+		}
+		catch (NumberFormatException e) {
+			textAreaLog.setText( textAreaLog.getText() +"\n Business not valid");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private boolean checkEconomy(){
+		String Input = textEconomy.getText();
+		//ensure RNGSEED is an integer
+		try {
+			double chance = Double.parseDouble(Input);
+			if(chance>=0 && chance<=1){
+				return true;
+			}
+		}
+		catch (NumberFormatException e) {
+			textAreaLog.setText( textAreaLog.getText() +"\n Economy not valid");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private void setToDefault(){
+		textRNGSEED.setText("100");
+		textQueueSize.setText("500");
+		textFirst.setText("0.03");
+		textPremium.setText("0.13");
+		textDailyMean.setText("1300");
+		textCancellation.setText("0.10");
+		textBusiness.setText("0.14");
+		textEconomy.setText("0.70");
+	
+	}
+	
+	private void changeDisplay(){
+		
+	}
 	
 }
