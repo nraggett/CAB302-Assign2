@@ -82,6 +82,7 @@ public class Linechart extends JPanel {
 		TimeSeries busTotal = new TimeSeries("Business");
 		TimeSeries premTotal = new TimeSeries("Premium");
 		TimeSeries econTotal = new TimeSeries("Economy");
+		TimeSeries freeTotal = new TimeSeries("Free");
 
 		//Base time, data set up - the calendar is needed for the time points
 		Calendar cal = GregorianCalendar.getInstance();
@@ -91,6 +92,7 @@ public class Linechart extends JPanel {
 		int business = 0;
 		int premium = 0;
 		int economy = 0;
+		int free = 0;
 
 		for(int i=21; i<=18*7; i++){
 			cal.set(2016,0,i,6,0);
@@ -100,6 +102,7 @@ public class Linechart extends JPanel {
 			business = book.getNumBusiness();
 			premium = book.getNumPremium();
 			economy = book.getNumEconomy();
+			free = book.getAvailable();
 
 	        //This is important - steal it shamelessly - Shamelessly stolen
 			firstTotal.add(new Day(timePoint),first);
@@ -107,9 +110,11 @@ public class Linechart extends JPanel {
 			premTotal.add(new Day(timePoint),premium);
 			econTotal.add(new Day(timePoint),economy);
 			bookTotal.add(new Day(timePoint),economy+business+premium+first);
+			freeTotal.add(new Day(timePoint), free);
 		}
 
 		//Collection
+		tsc.addSeries(freeTotal);
 		tsc.addSeries(bookTotal);
 		tsc.addSeries(econTotal);
 		tsc.addSeries(premTotal);
